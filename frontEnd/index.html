@@ -19,29 +19,42 @@
 
     <!-- Toolbar -->
     <md-toolbar layout="row">
-        <h1 layout="column" layout-align="center center">Night Traders</h1>
-        <md-button class="menu md-no-ink" ng-click="toggleNav()" hide-gt-sm layout="column" layout-align="end center">
-            <md-icon>menu</md-icon>
-        </md-button>
+        <md-icon class="c" hide-gt-sm ng-click="toggleNav()" layout="column" flex="15">menu</md-icon>
+        <h1 layout="column" layout-align="center center" flex>Night Traders</h1>
     </md-toolbar>
 
     <!-- Everything below the toolbar -->
     <div class="container" layout="row" flex>
-        <!-- Page Content -->
-        <md-content id="content" flex>
-            <ng-view></ng-view>
-        </md-content>
         <!-- Navbar -->
-        <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" md-component-id="rightNav">
-            <md-list ng-click="toggleNav()">
-                <md-list-item>
+        <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" md-component-id="leftNav" style="width: 250px;
+min-width: 250px;">
+            <md-list ng-click="toggleNav()" layout="row">
+                <md-list-item layout="column" flex>
                     <md-button>
-                        <md-icon></md-icon>
-                        <h3>Hey</h3>
+                        <a href="#/">Home</a>
+                    </md-button>
+                </md-list-item>
+                <md-list-item flex>
+                    <md-button flex>
+                        <a href="#/profile">Profile</a>
+                    </md-button>
+                </md-list-item>
+                <md-list-item flex>
+                    <md-button flex>
+                        <a href="#/signin">Sign In</a>
+                    </md-button>
+                </md-list-item>
+                <md-list-item flex>
+                    <md-button flex>
+                        <a href="#/signout">Sign Out</a>
                     </md-button>
                 </md-list-item>
             </md-list>
         </md-sidenav>
+        <!-- Page Content -->
+        <md-content id="content" flex>
+            <ng-view></ng-view>
+        </md-content>
     </div>
 
 
