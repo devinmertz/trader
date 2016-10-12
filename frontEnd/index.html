@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="TraderApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trader</title>
+
+    <!-- Angular Material Style Sheet -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+    <!-- Angular Material Font Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Personal Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body ng-controller="MainController" ng-cloak layout="column" flex>
+
+    <!-- Toolbar -->
+    <md-toolbar layout="row">
+        <h1 layout="column" layout-align="center center">Night Traders</h1>
+        <md-button class="menu md-no-ink" ng-click="toggleNav()" hide-gt-sm layout="column" layout-align="end center">
+            <md-icon>menu</md-icon>
+        </md-button>
+    </md-toolbar>
+
+    <!-- Everything below the toolbar -->
+    <div class="container" layout="row" flex>
+        <!-- Page Content -->
+        <md-content id="content" flex>
+            <ng-view></ng-view>
+        </md-content>
+        <!-- Navbar -->
+        <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" md-component-id="rightNav">
+            <md-list ng-click="toggleNav()">
+                <md-list-item>
+                    <md-button>
+                        <md-icon></md-icon>
+                        <h3>Hey</h3>
+                    </md-button>
+                </md-list-item>
+            </md-list>
+        </md-sidenav>
+    </div>
+
+
+    <!--<ng-view></ng-view>-->
+
+
+
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <!-- Controllers -->
+    <script src="controllers/app.js"></script>
+    <script src="controllers/homeCtrl.js"></script>
+    <!-- Services -->
+</body>
+
+</html>
