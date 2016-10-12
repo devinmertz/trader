@@ -1,0 +1,19 @@
+.removeHover :active,
+ :hover {
+    background-color: none;
+}
+
+
+/* Text Align Utility Classes */
+
+.l {
+    text-align: left;
+}
+
+.r {
+    text-align: right;
+}
+
+.c {
+    text-align: center;
+}

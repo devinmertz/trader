@@ -10,6 +10,18 @@ app.config(function ($routeProvider) {
         .when("/", {
             templateUrl: "./templates/home.html",
             controller: "HomeCtrl"
+        })
+        .when("/profile", {
+            templateUrl: "./templates/profile.html",
+            controller: "ProfileCtrl"
+        })
+        .when("/signin", {
+            templateUrl: "./templates/signin.html",
+            controller: "SignInCtrl"
+        })
+        .when("/signout", {
+            templateUrl: "./templates/signout.html",
+            controller: "SignOutCtrl"
         });
 });
 
@@ -22,6 +34,6 @@ app.config(function ($mdThemingProvider) {
 
 app.controller("MainController", ["$scope", "$mdSidenav", function ($scope, $mdSidenav) {
     $scope.toggleNav = function () {
-        $mdSidenav('rightNav').toggle();
+        $mdSidenav('leftNav').toggle();
     };
 }]);
