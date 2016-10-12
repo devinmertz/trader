@@ -8,8 +8,8 @@ var app = express();
 var port = process.env.PORT || 8080;
 
 var mongoose = require('mongoose');
-var Items = require('./models/Items');
-var Users = require('./models/Users');
+var Items = require('./schemas/Items');
+var Users = require('./schemas/Users');
 
 mongoose.connect('mongodb://localhost/trader');
 
@@ -20,15 +20,14 @@ mongoose.connect('mongodb://localhost/trader');
 
 app.use(cors());
 app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); 
 
 //app.use('/', routes);
 //app.use('/user', userRoute);
 
 app.use(express.static(path.join(__dirname, "../frontEnd/")));
 
-app.listen(port, function () {
-	console.log("You have reached port " + port);
+app.listen(port,function(){
+	console.log("You have reached port " + port)
 });
 
-module.exports = app;
