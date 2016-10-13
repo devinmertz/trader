@@ -15,7 +15,7 @@ var userSchema = new Schema({
 	},
 	username: {
 		type: String,
-		required: true, 
+		required: true,
 		unique: true
 	},
 	password: {
@@ -31,8 +31,7 @@ var userSchema = new Schema({
 			ref: 'User'
 		},
 		content: {
-			type: String,
-			required: true
+			type: String
 		}
 	}],
 	tradeItems: [{
@@ -45,9 +44,9 @@ var userSchema = new Schema({
 // Token Auth password hash
 userSchema.pre("save", function (next) {
 	var user = this;
-	
+
 	if (!user.isModified("password")) next();
-	
+
 	bcrypt.hash(user.password, 10, function (err, hash) {
 		if (err) console.log(err);
 		user.password = hash;

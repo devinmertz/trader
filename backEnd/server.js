@@ -18,7 +18,7 @@ var authRoute = require('./routes/authRoute');
 
 var port = process.env.PORT || 8080;
 
-mongoose.connect(config.database, function(){
+mongoose.connect(config.database, function () {
     console.log("Mongoose on the DB");
 });
 
@@ -41,5 +41,5 @@ app.use('api', jwt({
 app.use(express.static(path.join(__dirname, "frontEnd")));
 
 app.listen(port, function () {
-    console.log("You have reached port " + port)
+    console.log("You have reached port " + port);
 });
