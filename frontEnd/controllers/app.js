@@ -1,4 +1,4 @@
-var app = angular.module("TraderApp", ["ngRoute", "ngMaterial"]);
+var app = angular.module("TraderApp", ["ngRoute", "ngMaterial", "TraderApp.Auth"]);
 
 // Routing Config
 app.config(function ($routeProvider) {
@@ -15,13 +15,17 @@ app.config(function ($routeProvider) {
             templateUrl: "./templates/profile.html",
             controller: "ProfileCtrl"
         })
-        .when("/signin", {
-            templateUrl: "./templates/signin.html",
-            controller: "SignInCtrl"
+        .when("/login", {
+            templateUrl: "./templates/login.html",
+            controller: "LoginCtrl"
         })
-        .when("/signout", {
-            templateUrl: "./templates/signout.html",
-            controller: "SignOutCtrl"
+//        .when("/logout", {
+//            templateUrl: "./templates/logout.html",
+//            controller: "LogoutCtrl"
+//        })
+        .when("/signup", {
+            templateUrl: "./templates/signup.html",
+            controller: "SignupCtrl"
         });
 });
 
