@@ -2,7 +2,7 @@ var express = require('express');
 var authRoute = express.Router();
 var jwt = require('jsonwebtoken');
 var config = require('../config');
-var User = require('../models/User');
+var User = require('../schemas/Users');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
