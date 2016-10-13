@@ -17,10 +17,22 @@ var UserSchema = new mongoose.Schema({
 	},
 	imgUrl: String,
 	location: String,
-	tradeItems: {
-		type: mongoose.Schema.Types.ObjectId,
+	lookingFor: [String],
+	messages: [{
+		from: {
+			type: Schema.Types.ObjectId,
+			ref: 'User'
+		},
+		content: {
+			type: String,
+			required: true
+		}
+	}],
+	tradeItems: [{
+		type: Schema.Types.ObjectId,
 		ref: 'Item'
-	}
+	}]
+
 });
 
 module.exports = mongoose.model('User', UserSchema);
