@@ -12,9 +12,10 @@ var Items = require('./schemas/Items');
 var Users = require('./schemas/Users');
 
 var userRoute = require('./routes/userRoute');
+var userRouteProtected = require('./routes/userRouteProtected');
 var itemRoute = require('./routes/itemRoute');
+var itemRouteProtected = require('./routes/itemRouteProtected');
 var authRoute = require('./routes/authRoute');
-//var routes = require('./routes/index');
 
 var port = process.env.PORT || 8080;
 
@@ -29,14 +30,16 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-//app.use('/', routes);
-app.use('/user', userRoute);
-app.use('/item', itemRoute);
-app.use('/auth', authRoute);
-
-app.use('api', jwt({
+app.use('/api', jwt({
     secret: config.secret
 }));
+
+app.use('/auth', authRoute);
+app.use('/user', userRoute);
+app.use('/api/user', userRouteProtected);
+app.use('/item', itemRoute);
+app.use('/api/item', itemRouteProtected);
+
 
 app.use(express.static(path.join(__dirname, "frontEnd")));
 
