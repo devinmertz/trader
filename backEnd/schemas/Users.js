@@ -22,10 +22,10 @@ var userSchema = new Schema({
 		type: String,
 		required: true
 	},
-	friends: {
+	friends: [{
 		type: Schema.Types.ObjectId,
 		ref: 'User'
-	},
+	}],
 	imgUrl: String,
 	location: String,
 	lookingFor: [String],
