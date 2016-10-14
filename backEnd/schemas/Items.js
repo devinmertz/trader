@@ -26,10 +26,11 @@ var ItemSchema = new mongoose.Schema({
         }
     }],
     willTradeFor: String,
+    datePosted: Date,
     category: {
         type: String,
         required: true,
-        enum: ['entertainment', 'auto', 'clothing', 'furniture', 'books', 'textbooks', 'movies', 'holiday', 'toys', 'baby', 'toddler', 'boardgames', 'services', 'other']
+        enum: ['entertainment', 'auto', 'clothing', 'furniture', 'books', 'textbooks', 'movies', 'holiday', 'toys', 'baby', 'toddler', 'boardgames', 'services', 'technology', 'other']
     },
     imgUrl: String
 });

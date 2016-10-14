@@ -4,7 +4,7 @@ var User = require('../schemas/Users');
 var Item = require('../schemas/Items');
 
 userRoute.route("/")
-    // GET all users
+    // GET all users ~
     .get(function (req, res) {
         User.find({}, {
             // restrict returned fields
@@ -16,7 +16,7 @@ userRoute.route("/")
             res.send(users);
         });
     })
-    // POST a new user
+    // POST a new user ~
     .post(function (req, res) {
         var newUser = new User(req.body);
         newUser.save(function (err, savedUser) {
@@ -26,7 +26,7 @@ userRoute.route("/")
     });
 
 userRoute.route("/search")
-    // Find users by first and last name
+    // Find users by first and last name ~
     .get(function (req, res) {
 
         // construct object from query
