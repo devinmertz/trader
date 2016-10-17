@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="TraderApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Trader</title>
+
+    <!-- Angular Material Style Sheet -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+
+    <!-- Angular Material Font Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Personal Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body ng-controller="MainController" ng-cloak layout="column" flex>
+
+    <!-- Toolbar -->
+    <md-toolbar layout="row">
+        <md-icon class="c" hide-gt-sm ng-click="toggleNav()" layout="column" flex="15">menu</md-icon>
+        <h1 layout="column" layout-align="center center" flex>Night Traders</h1>
+    </md-toolbar>
+
+    <!-- Everything below the toolbar -->
+    <div class="container" layout="row" flex>
+        <!-- Navbar -->
+        <md-sidenav md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-4dp" md-component-id="leftNav" style="width: 250px;
+min-width: 250px;">
+            <md-list ng-click="toggleNav()" layout="row">
+                <md-list-item layout="column" flex>
+                    <md-button>
+                        <a href="#/">Home</a>
+                    </md-button>
+                </md-list-item>
+                <md-list-item flex>
+                    <md-button flex>
+                        <a href="#/profile">Profile</a>
+                    </md-button>
+                </md-list-item>
+                <md-list-item flex>
+                    <md-button flex>
+                        <a href="#/signin">Sign In</a>
+                    </md-button>
+                </md-list-item>
+                <md-list-item flex>
+                    <md-button flex>
+                        <a href="#/signout">Sign Out</a>
+                    </md-button>
+                </md-list-item>
+            </md-list>
+        </md-sidenav>
+        <!-- Page Content -->
+        <md-content id="content" flex>
+            <ng-view></ng-view>
+        </md-content>
+    </div>
+
+
+    <!--<ng-view></ng-view>-->
+
+
+
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
+    <!-- Angular Material requires Angular.js Libraries -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <!-- Angular Material Library -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+    <!-- Controllers -->
+    <script src="controllers/app.js"></script>
+    <script src="controllers/homeCtrl.js"></script>
+    <!-- Authentication Controllers and Services -->
+    <script src="authentication/auth.js"></script>
+    <script src="authentication/signup/signupCtrl.js"></script>
+    <script src="authentication/login/loginCtrl.js"></script>
+    <!-- Services -->
+    <script src="services/profileService.js"></script>
+</body>
+
+</html>
