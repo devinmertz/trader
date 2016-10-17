@@ -46,10 +46,10 @@
 				<md-button class="md-icon-button" ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
 					<md-icon md-svg-icon="navigation:ic_menu_24px" aria-label="Menu"></md-icon>
 				</md-button>
-				
+
 				<h3>
-            Day Trader, Fighter of The Night Trader
-          </h3>
+					Day Trader, Fighter of The Night Trader
+				</h3>
 				<span flex></span>
 				<md-button class="md-icon-button" aria-label="Search" ng-click="toggleSearch()">
 					<md-icon md-svg-icon="action:ic_search_24px" aria-label="Search"></md-icon>
@@ -74,8 +74,8 @@
 					<md-icon md-svg-icon="navigation:ic_arrow_back_24px" aria-label="Back"></md-icon>
 				</md-button>
 				<h3 role="button" ng-click="toggleSearch()">
-            Back
-          </h3>
+					Back
+				</h3>
 				<span flex="5"></span>
 				<span ng-controller="DemoCtrl as ctrl" flex>
             <md-autocomplete md-theme="input"
@@ -132,23 +132,28 @@
 									</md-card-content>
 
 									<md-card-actions layout="row" layout-align="end center">
-										<md-button>Action 1</md-button>
-										<md-button>Action 2</md-button>
+										<md-button class="md-primary" ng-click="offer()">Make an Offer</md-button>
+										<md-button class="md-primary" ng-click="message()">Send Message</md-button>
 									</md-card-actions>
 								</md-card>
 
 							</div>
 						</div>
 					</div>
-					<div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()" layout="row" layout-align="center center">
+					<div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()"
+									layout="row" layout-align="center center">
 						<div>
 							<h2 class="md-title inset">{{user.firstName}} {{user.lastName}}'s Trade Items</h2>
 							<div layout="row" layout-align="center center" layout-wrap>
 
 
 
-								<md-card layout='column' flex-gt-lg='45' ng-repeat="item in user.tradeItems | filter:search | orderBy:'-what'">
+								<md-card layout='column' flex-gt-lg='45' ng-repeat="item in user.tradeItems | filter:search | orderBy:'-what'" style="position: relative;">
 
+									<!-- Item notification FAB -->
+									<md-button class="md-fab md-fab-top-right" ng-click="flipCard()" ng-if="item.offers.length > 0">
+										<span>{{item.offers.length}}</span>
+									</md-button>
 									<img ng-src="{{item.imgUrl}}" height="350px;" class="md-card-image" alt="item pic">
 									<md-card-header>
 										<md-card-avatar>
@@ -156,7 +161,7 @@
 										</md-card-avatar>
 										<md-card-header-text>
 											<span class="md-title">{{user.username}}</span>
-											<span class="md-subhead">{{user.firstName}}    {{user.lastName}}</span>
+											<span class="md-subhead">{{user.firstName}} {{user.lastName}}</span>
 										</md-card-header-text>
 									</md-card-header>
 									<md-card-title>
@@ -170,9 +175,11 @@
 									</md-card-content>
 
 									<md-card-actions layout="row" layout-align="end center">
-										<md-button>Action 1</md-button>
-										<md-button>Action 2</md-button>
+										<md-button class="md-primary" ng-click="updateItem()">Update</md-button>
+										<md-button class="md-primary" ng-click="removeItem()">Remove</md-button>
 									</md-card-actions>
+
+
 								</md-card>
 
 							</div>

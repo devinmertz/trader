@@ -14,17 +14,23 @@ app.service("TokenService", function () {
 });
 
 app.service("UserService", function ($http, $location, TokenService) {
+
+    var baseUrl = "http://localhost:8080";
+    var _this = this;
+
     this.loggedInUser = {};
 
     this.signup = function (userObj) {
-        return $http.post('/auth/signup', userObj).then(function (response) {
+        return $http.post(baseUrl + '/auth/signup', userObj).then(function (response) {
             if (response.data._id && response.data.username === userObj.username) {
                 console.log("Successfully signed up!");
+                return response.data;
             }
         });
     };
     this.login = function (userObj) {
-        return $http.post('/auth/login', userObj).then(function (response) {
+        return $http.post(baseUrl + '/auth/login', userObj).then(function (response) {
+            console.log("response ", response);
             if (response.data.token) {
                 this.loggedInUser = response.data.user;
                 TokenService.saveToken(response.data.token);
