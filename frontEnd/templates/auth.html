@@ -13,8 +13,8 @@
 					<md-icon md-svg-icon="navigation:ic_menu_24px" aria-label="Menu"></md-icon>
 				</md-button>
 				<h3>
-            Trader App
-          </h3>
+					Trader App
+				</h3>
 				<span flex></span>
 				<md-button class="md-icon-button" aria-label="Search" ng-click="toggleSearch()">
 					<md-icon md-svg-icon="action:ic_search_24px" aria-label="Search"></md-icon>
@@ -39,8 +39,8 @@
 					<md-icon md-svg-icon="navigation:ic_arrow_back_24px" aria-label="Back"></md-icon>
 				</md-button>
 				<h3 role="button" ng-click="toggleSearch()">
-            Back
-          </h3>
+					Back
+				</h3>
 				<span flex="5"></span>
 				<span ng-controller="DemoCtrl as ctrl" flex>
             <md-autocomplete md-theme="input"
@@ -68,56 +68,58 @@
 			<ui-view layout="column" layout-fill layout-padding>
 				<div class="inset" hide-sm></div>
 				<ng-switch on="data.selectedIndex" class="tabpanel-container">
-					<div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()" layout="row" layout-align="center center">
+					<div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()"
+									layout="row" layout-align="center center">
 						<div flex-gt-sm="90" flex-gt-md="80">
 
 
-
+							<!-- Sign Up content -->
 							<md-content layout="row" layout-align="space-around" layout-padding="layout-padding" ng-cloak="ng-cloak" class="login-form">
-								<md-card flex="flex" flex-gt-sm="50" flex-gt-md="33">
+								<md-card flex="flex" flex-gt-sm="50" flex-gt-md="50">
 									<md-toolbar>
 										<div class="md-toolbar-tools">
 											<h2><span>Sign Up</span></h2>
 										</div>
 									</md-toolbar>
 									<md-card-content>
+										<!-- New account form -->
 										<form name="Form">
 											<md-input-container class="md-block">
 												<label>First Name</label>
-												<input type="text" name="First Name" ng-model="user.firstName" placeholder="First Name" required="" />
+												<input type="text" name="First Name" ng-model="newUser.firstName" placeholder="First Name" required="" />
 												<div ng-messages="Form.email.$error" role="alert" multiple="">
 													<div ng-message="required" class="my-message">Please enter your first name.</div>
 												</div>
 											</md-input-container>
 											<md-input-container class="md-block">
 												<label>Last Name</label>
-												<input type="password" name="Last Name" ng-model="user.lastName" placeholder="Last Name" required=""/>
+												<input type="text" name="Last Name" ng-model="newUser.lastName" placeholder="Last Name" required="" />
 												<div ng-messages="Form.email.$error" role="alert" multiple="">
 													<div ng-message="required" class="my-message">Please enter your last name.</div>
 												</div>
 											</md-input-container>
 											<md-input-container class="md-block">
 												<label>Username</label>
-												<input type="text" name="Username" ng-model="user.userName" placeholder="Username" required=""/>
+												<input type="text" name="Username" ng-model="newUser.username" placeholder="Username" required="" />
 												<div ng-messages="Form.email.$error" role="alert" multiple="">
 													<div ng-message="required" class="my-message">Please enter a username.</div>
 												</div>
 											</md-input-container>
 											<md-input-container class="md-block">
 												<label>Password</label>
-												<input type="password" name="Password" ng-model="user.password" placeholder="Password" required=""/>
+												<input type="password" name="Password" ng-model="newUser.password" placeholder="Password" required="" />
 												<div ng-messages="Form.email.$error" role="alert" multiple="">
 													<div ng-message="required" class="my-message">Please enter a password.</div>
 												</div>
 											</md-input-container>
 											<md-input-container class="md-block">
 												<label>Profile Pic Url</label>
-												<input type="text" name="Last Name" ng-model="user.imgUrl" placeholder="Profile Pic Url" />
-												
+												<input type="text" name="Last Name" ng-model="newUser.imgUrl" placeholder="Profile Pic Url" />
+
 											</md-input-container>
-											
-											
-											<md-button ng-disabled="!Form.$valid" ng-click="vm.submit()" class="md-raised md-primary"> Submit </md-button>
+
+
+											<md-button ng-disabled="!Form.$valid" ng-click="signup()" class="md-raised md-primary"> Submit </md-button>
 											<md-button class="md-raised md-primary" href='#/'>temp secret button</md-button>
 										</form>
 									</md-card-content>
@@ -133,9 +135,10 @@
 
 
 
-					<div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()" layout="row" layout-align="center center">
+					<div role="tabpanel" id="tab2-content" aria-labelledby="tab2" ng-switch-when="1" md-swipe-left="next()" md-swipe-right="previous()"
+									layout="row" layout-align="center center">
 						<div flex-gt-sm="90" flex-gt-md="80">
-
+							<!-- Log In content -->
 							<md-content layout="row" layout-align="space-around" layout-padding="layout-padding" ng-cloak="ng-cloak" class="login-form">
 								<md-card flex="flex" flex-gt-sm="50" flex-gt-md="33">
 									<md-toolbar>
@@ -144,23 +147,25 @@
 										</div>
 									</md-toolbar>
 									<md-card-content>
+										<!-- Log in form -->
 										<form name="Form">
 											<md-input-container class="md-block">
 												<label>Login</label>
-												<input type="text" name="email" ng-model="vm.formData.email" placeholder="login" required="" />
+												<input type="text" name="email" ng-model="loginUser.email" placeholder="login" required="" />
 												<div ng-messages="Form.email.$error" role="alert" multiple="">
 													<div ng-message="required" class="my-message">Please enter your email.</div>
 												</div>
 											</md-input-container>
 											<md-input-container class="md-block">
 												<label>Password</label>
-												<input type="password" name="password" ng-model="vm.formData.password" placeholder="password" required="" md-maxlength="16" />
+												<input type="password" name="password" ng-model="loginUser.password" placeholder="password" required="" md-maxlength="16"
+												/>
 												<div ng-messages="Form.password.$error" role="alert" multiple="">
 													<div ng-message="required" class="my-message">Please enter your password.</div>
 													<div> </div>
 												</div>
 											</md-input-container>
-											<md-button ng-disabled="!Form.$valid" ng-click="vm.submit()" class="md-raised md-primary"> Login </md-button>
+											<md-button ng-disabled="!Form.$valid" ng-click="login()" class="md-raised md-primary"> Login </md-button>
 											<md-button class="md-raised md-primary" href='#/'>temp secret button</md-button>
 										</form>
 									</md-card-content>

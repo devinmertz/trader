@@ -1,4 +1,4 @@
-var app = angular.module('TraderApp', ['ngMaterial', 'ngRoute']);
+var app = angular.module('TraderApp', ['ngMaterial', 'ngRoute', 'TraderApp.Auth']);
 
 
 app.config(function ($routeProvider) {
@@ -11,16 +11,18 @@ app.config(function ($routeProvider) {
 			templateUrl: "./templates/home.html",
 			controller: "AppCtrl"
 		})
-
-	.when("/auth", {
-		templateUrl: "./templates/auth.html",
-		controller: "AppCtrl"
-	})
-
-	.when("/logout", {
-		templateUrl: "./templates/logout.html",
-		controller: "AppCtrl"
-	})
+		.when("/auth", {
+			templateUrl: "./templates/auth.html",
+			controller: "AppCtrl"
+		})
+		.when("/logout", {
+			templateUrl: "./templates/logout.html",
+			controller: "AppCtrl"
+		})
+		.when("/profile", {
+			templateUrl: "./templates/profile.html",
+			controller: "AppCtrl"
+		});
 });
 
 //app.factory('items', ['$http', function($http){
@@ -51,29 +53,63 @@ app.config(function ($routeProvider) {
 //	return obj;
 //}]);
 
+// ProfileService is to update user / UserService is to sign up and log in / out
+app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', 'ProfileService', 'UserService', '$location', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog, ProfileService, UserService, $location) {
 
-app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog) {
+	$scope.newUser = {};
+	$scope.loginUser = {};
+	$scope.user = UserService.loggedInUser;
 
-//	$scope.items = obj.items;
-//	
-//	
-//	$scope.addItem = function() {
-//		if (!$scope.name || $scope.name === '') {
-//			return;
-//		}
-//		items.create({
-//			name: $scope.name,
-//			description: $scope.description,
-//			willTradeFor: $scope.willTradeFor,
-//			imgUrl: $scope.imgUrl
-//		});
-//		$scope.name = '';
-//		$scope.description = '';
-//		$scope.willTradeFor = '';
-//		$scope.imgUrl = '';
-//	};
-//	
-	
+	$scope.signup = function () {
+		UserService.signup($scope.newUser).then(function (response) {
+			UserService.login($scope.newUser).then(function (response) {
+				$scope.newUser = {};
+			});
+		});
+	};
+
+	$scope.login = function () {
+		UserService.login($scope.loginUser).then(function (response) {
+			$scope.loginUser = {};
+		});
+	};
+
+	$scope.removeItem = function () {
+
+	};
+
+	$scope.updateItem = function () {
+
+	};
+
+	$scope.message = function () {
+
+	};
+
+	$scope.offer = function () {
+
+	};
+
+	//	$scope.items = obj.items;
+	//	
+	//	
+	//	$scope.addItem = function() {
+	//		if (!$scope.name || $scope.name === '') {
+	//			return;
+	//		}
+	//		items.create({
+	//			name: $scope.name,
+	//			description: $scope.description,
+	//			willTradeFor: $scope.willTradeFor,
+	//			imgUrl: $scope.imgUrl
+	//		});
+	//		$scope.name = '';
+	//		$scope.description = '';
+	//		$scope.willTradeFor = '';
+	//		$scope.imgUrl = '';
+	//	};
+	//	
+
 	// Toolbar search toggle
 	$scope.toggleSearch = function (element) {
 		$scope.showSearch = !$scope.showSearch;
@@ -85,26 +121,22 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 	};
 
 	// Menu items
-	$scope.menu = [
-		{
-			link: '#/',
-			title: 'Home',
-			icon: 'action:ic_dashboard_24px',
+	$scope.menu = [{
+		link: '#/',
+		title: 'Home',
+		icon: 'action:ic_dashboard_24px',
 
-    },
-		{
-			link: '#/profile',
-			title: 'Profile',
-			icon: 'social:ic_group_24px',
+	}, {
+		link: '#/profile',
+		title: 'Profile',
+		icon: 'social:ic_group_24px',
 
-    },
-		{
-			link: '#/messages',
-			title: 'Messages',
-			icon: 'communication:ic_message_24px',
+	}, {
+		link: '#/messages',
+		title: 'Messages',
+		icon: 'communication:ic_message_24px',
 
-    }
-  ];
+	}];
 	$scope.admin = [
 
 		{
@@ -112,14 +144,13 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 			title: 'Logout',
 			icon: 'action:ic_settings_24px',
 
-    },
-		{
+		}, {
 			link: '#/auth',
 			title: 'temp auth',
 			icon: 'action:ic_settings_24px',
 
-    }
-  ];
+		}
+	];
 
 	//	mock user activity
 
@@ -132,67 +163,59 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 		location: "Los Angeles, CA",
 		lookingFor: "cool stuff",
 		tradeItems: [{
-				name: "Yoga Mat",
-				description: "Slightly used but in great condition",
-				owner: "John Gates",
-				willTradeFor: "Cereal Boxes or new tires",
-				imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
-		},
-			{
-				name: "MacBook Pro 2012",
-				description: "Slightly used but sooo goood",
-				owner: "John Gates",
-				willTradeFor: "newer iphone",
-				imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
-					}]
+			name: "Yoga Mat",
+			description: "Slightly used but in great condition",
+			owner: "John Gates",
+			willTradeFor: "Cereal Boxes or new tires",
+			imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
+		}, {
+			name: "MacBook Pro 2012",
+			description: "Slightly used but sooo goood",
+			owner: "John Gates",
+			willTradeFor: "newer iphone",
+			imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
+		}]
 
 	};
 
 	// Mock activity
-	$scope.activity = [
-		{
-				name: "Kindle Fire",
-				description: "Good condition",
-				owner: "Mike",
-				willTradeFor: "ipad or ipad mini",
-				imgUrl: "http://www.androidcentral.com/sites/androidcentral.com/files/styles/larger/public/article_images/2014/09/Amazon-Kindle-Fire-HDX89.jpg?itok=5fenbZ5F"
-					},
-		{
-				name: "Lawn Chairs",
-				description: "Slightly used",
-				owner: "Dillon",
-				willTradeFor: "Samsung Note 7",
-				imgUrl: "http://tart.highbarmiami.com/wp-content/uploads/2016/03/Foldable-Lawn-Chairs-Big-Lots.jpg"
-					},
-		{
-				name: "Cowboy Boots",
-				description: "Snake skin size 11",
-				owner: "Sam",
-				willTradeFor: "iphone",
-				imgUrl: "http://www.zappos.com/images/z/1/5/8/7/3/0/1587307-p-4x.jpg"
-					},
-		{
-				name: "Playstation 4",
-				description: "Works just fine",
-				owner: "Jo Jo",
-				willTradeFor: "french fries",
-				imgUrl: "https://cnet3.cbsistatic.com/img/UxcARCVAmoih6RLZqLUT964Lvuw=/620x0/2013/11/11/3dd2de99-84cb-11e3-beb9-14feb5ca9861/Sony_PS4_35618167_03.jpg"
-					},
-		{
-				name: "Yoga Mat",
-				description: "Slightly but in great condition",
-				owner: "John Gates",
-				willTradeFor: "Cereal Boxes or new tires",
-				imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
-					},
-		{
-				name: "MacBook Pro 2012",
-				description: "Slightly used but sooo goood",
-				owner: "John Gates",
-				willTradeFor: "newer iphone",
-				imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
-					}
-    ];
+	$scope.activity = [{
+		name: "Kindle Fire",
+		description: "Good condition",
+		owner: "Mike",
+		willTradeFor: "ipad or ipad mini",
+		imgUrl: "http://www.androidcentral.com/sites/androidcentral.com/files/styles/larger/public/article_images/2014/09/Amazon-Kindle-Fire-HDX89.jpg?itok=5fenbZ5F"
+	}, {
+		name: "Lawn Chairs",
+		description: "Slightly used",
+		owner: "Dillon",
+		willTradeFor: "Samsung Note 7",
+		imgUrl: "http://tart.highbarmiami.com/wp-content/uploads/2016/03/Foldable-Lawn-Chairs-Big-Lots.jpg"
+	}, {
+		name: "Cowboy Boots",
+		description: "Snake skin size 11",
+		owner: "Sam",
+		willTradeFor: "iphone",
+		imgUrl: "http://www.zappos.com/images/z/1/5/8/7/3/0/1587307-p-4x.jpg"
+	}, {
+		name: "Playstation 4",
+		description: "Works just fine",
+		owner: "Jo Jo",
+		willTradeFor: "french fries",
+		imgUrl: "https://cnet3.cbsistatic.com/img/UxcARCVAmoih6RLZqLUT964Lvuw=/620x0/2013/11/11/3dd2de99-84cb-11e3-beb9-14feb5ca9861/Sony_PS4_35618167_03.jpg"
+	}, {
+		name: "Yoga Mat",
+		description: "Slightly but in great condition",
+		owner: "John Gates",
+		willTradeFor: "Cereal Boxes or new tires",
+		imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
+	}, {
+		name: "MacBook Pro 2012",
+		description: "Slightly used but sooo goood",
+		owner: "John Gates",
+		willTradeFor: "newer iphone",
+		imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
+	}];
 
 	// Bottomsheet & Modal Dialogs
 	$scope.alert = '';
@@ -206,13 +229,13 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 			$scope.alert = clickedItem.name + ' clicked!';
 		});
 	};
-	
-//	$scope.postItem = 
+
+	//	$scope.postItem = 
 
 	$scope.showAdd = function (ev) {
 		$mdDialog.show({
 				controller: DialogController,
-				template: '<md-dialog aria-label="Form"> <md-content class="md-padding"> <form name="userForm"> <md-input-container flex> <label>Item Name</label> <textarea ng-model="name" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Item Description</label> <textarea ng-model="description" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Will Trade For</label> <textarea ng-model="willTradeFor" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Image Url</label> <textarea ng-model="imgUrl" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="addItem()" class="md-primary"> Post </md-button> </div></md-dialog>',
+				template: '<md-dialog aria-label="Form" style="width: 500px;"> <md-content class="md-padding"> <form name="userForm"> <md-input-container flex> <label>Item Name</label> <textarea ng-model="name" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Item Description</label> <textarea ng-model="description" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Will Trade For</label> <textarea ng-model="willTradeFor" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Image Url</label> <textarea ng-model="imgUrl" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="md-primary" ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="addItem()" class="md-primary"> Post </md-button> </div></md-dialog>',
 				targetEvent: ev,
 			})
 			.then(function (answer) {
@@ -221,27 +244,22 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 				$scope.alert = 'You cancelled the dialog.';
 			});
 	};
-					}]);
+}]);
 
 app.controller('ListBottomSheetCtrl', function ($scope, $mdBottomSheet) {
-	$scope.items = [
-		{
-			name: 'Share',
-			icon: 'social:ic_share_24px'
-		},
-		{
-			name: 'Upload',
-			icon: 'file:ic_cloud_upload_24px'
-		},
-		{
-			name: 'Copy',
-			icon: 'content:ic_content_copy_24px'
-		},
-		{
-			name: 'Print this page',
-			icon: 'action:ic_print_24px'
-		},
-  ];
+	$scope.items = [{
+		name: 'Share',
+		icon: 'social:ic_share_24px'
+	}, {
+		name: 'Upload',
+		icon: 'file:ic_cloud_upload_24px'
+	}, {
+		name: 'Copy',
+		icon: 'content:ic_content_copy_24px'
+	}, {
+		name: 'Print this page',
+		icon: 'action:ic_print_24px'
+	}, ];
 
 	$scope.listItemClick = function ($index) {
 		var clickedItem = $scope.items[$index];
@@ -309,12 +327,12 @@ function DemoCtrl($timeout, $q) {
 
 //color theme//
 
-app.config(function($mdThemingProvider) {
-               $mdThemingProvider.theme('default') 
-                  .primaryPalette('indigo')
-                  .accentPalette('orange')
-                  .warnPalette('red');
-               });
+app.config(function ($mdThemingProvider) {
+	$mdThemingProvider.theme('default')
+		.primaryPalette('indigo')
+		.accentPalette('orange')
+		.warnPalette('red');
+});
 
 
 
