@@ -3,27 +3,21 @@
 		<md-toolbar class="md-hue-2">
 			<span flex></span>
 			<div layout="row" layout-align="start center">
-				<md-icon class="md-avatar" md-svg-icon="avatars:svg-1"></md-icon>
+				<md-icon class="md-avatar" md-svg-icon="avatars:svg-16"></md-icon>
 				<span flex></span>
 			</div>
 			<span flex></span>
-			<div class="md-body-2">Firstname Lastname</div>
-			<div class="md-body-1">email@domainname.com</div>
+			<div class="md-body-2">{{user.username}}</div>
+			<div class="md-body-1">{{user.firstName}} {{user.lastName}}</div>
 		</md-toolbar>
-
 		<!--      //sidenav menu//-->
-
 		<md-list>
-
 			<md-list-item class="md-2-line" ng-repeat="item in menu" role="link" md-ink-ripple>
-
 				<md-icon md-svg-icon="{{item.icon}}" aria-label="{{item.title}}"></md-icon>
 				<div class="md-list-item-text">
 					<a class="md-body-2" href="{{item.link}}">{{item.title}}</a>
 				</div>
-
 			</md-list-item>
-
 			<md-divider></md-divider>
 			<md-subheader class="md-no-sticky"></md-subheader>
 			<md-list-item class="md-2-line" ng-repeat="item in admin" role="link" md-ink-ripple>
@@ -48,7 +42,7 @@
 				</md-button>
 				
 				<h3>
-            Day Trader, Fighter of The Night Trader
+            Trader
           </h3>
 				<span flex></span>
 				<md-button class="md-icon-button" aria-label="Search" ng-click="toggleSearch()">
@@ -132,8 +126,7 @@
 									</md-card-content>
 
 									<md-card-actions layout="row" layout-align="end center">
-										<md-button>Action 1</md-button>
-										<md-button>Action 2</md-button>
+										<md-button class="md-raised md-accent">Request Trade</md-button></span>
 									</md-card-actions>
 								</md-card>
 
@@ -156,7 +149,7 @@
 										</md-card-avatar>
 										<md-card-header-text>
 											<span class="md-title">{{user.username}}</span>
-											<span class="md-subhead">{{user.firstName}}    {{user.lastName}}</span>
+											
 										</md-card-header-text>
 									</md-card-header>
 									<md-card-title>
@@ -170,8 +163,7 @@
 									</md-card-content>
 
 									<md-card-actions layout="row" layout-align="end center">
-										<md-button>Action 1</md-button>
-										<md-button>Action 2</md-button>
+										<md-button class="md-raised md-accent">Request Trade</md-button></span>
 									</md-card-actions>
 								</md-card>
 

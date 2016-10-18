@@ -11,6 +11,10 @@ app.config(function ($routeProvider) {
 			templateUrl: "./templates/home.html",
 			controller: "AppCtrl"
 		})
+		.when("/profile", {
+			templateUrl: "./templates/profile.html",
+			controller: "AppCtrl"
+		})
 
 	.when("/auth", {
 		templateUrl: "./templates/auth.html",
@@ -19,6 +23,11 @@ app.config(function ($routeProvider) {
 
 	.when("/logout", {
 		templateUrl: "./templates/logout.html",
+		controller: "AppCtrl"
+	})
+
+	.when("/messages", {
+		templateUrl: "./templates/messages.html",
 		controller: "AppCtrl"
 	})
 });
@@ -52,28 +61,85 @@ app.config(function ($routeProvider) {
 //}]);
 
 
-app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog) {
-
-//	$scope.items = obj.items;
+//app.factory('messages', ['$http', function($http){
 //	
+//	var mes = {
+//		messages: []
+//	};
 //	
-//	$scope.addItem = function() {
+//	mes.getAll = function () {
+//		return $http.get('/messages').success(function(data) {
+//			angular.copy(data, mes.messages);
+//		});
+//	};
+//	
+//	mes.create = function(item) {
+//		return $http.post('/messages', message).success(function(data) {
+//			mes.messages.push(data);
+//		});
+//	};
+//	
+//	mes.get = function (id) {
+//		return $http.get('/messages/' + id)
+//		.then(function (res) {
+//			return res.data;
+//		});
+//	};
+//	
+//	return mes;
+//}]);
+//
+//
+//app.controller('MessageCtrl', ['$scope', function($scope){
+//	
+//	$scope.messages = mes.messages;
+//	
+//	$scope.addMessage = function() {
 //		if (!$scope.name || $scope.name === '') {
 //			return;
 //		}
-//		items.create({
-//			name: $scope.name,
-//			description: $scope.description,
-//			willTradeFor: $scope.willTradeFor,
-//			imgUrl: $scope.imgUrl
+//		messages.create({
+//			to: $scope.to,
+//			from: $scope.from,
+//			subject: $scope.subject,
+//			content: $scope.content
 //		});
-//		$scope.name = '';
-//		$scope.description = '';
-//		$scope.willTradeFor = '';
-//		$scope.imgUrl = '';
+//		$scope.to = '';
+//		$scope.from = '';
+//		$scope.subject = '';
+//		$scope.content = ''
 //	};
+//
 //	
-	
+//}]);
+
+
+
+
+
+
+app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog) {
+
+	//	$scope.items = obj.items;
+	//	
+	//	
+	//	$scope.addItem = function() {
+	//		if (!$scope.name || $scope.name === '') {
+	//			return;
+	//		}
+	//		items.create({
+	//			name: $scope.name,
+	//			description: $scope.description,
+	//			willTradeFor: $scope.willTradeFor,
+	//			imgUrl: $scope.imgUrl
+	//		});
+	//		$scope.name = '';
+	//		$scope.description = '';
+	//		$scope.willTradeFor = '';
+	//		$scope.imgUrl = ''
+	//	};
+	//	
+
 	// Toolbar search toggle
 	$scope.toggleSearch = function (element) {
 		$scope.showSearch = !$scope.showSearch;
@@ -131,10 +197,28 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 		imgUrl: "http://a4.files.biography.com/image/upload/c_fit,cs_srgb,dpr_1.0,h_1200,q_80,w_1200/MTE1ODA0OTcxODA2OTgzNjkz.jpg",
 		location: "Los Angeles, CA",
 		lookingFor: "cool stuff",
+		messages: [{
+				from: $scope.user,
+				content: "Hey I Would like to trade for your macbook. Is there anything on my profile you would like to exchange for?"
+		}, {
+				from: $scope.user,
+				content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+		},
+			{
+				from: $scope.user,
+				content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+		},
+			{
+				from: $scope.user,
+				content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+		}],
 		tradeItems: [{
 				name: "Yoga Mat",
 				description: "Slightly used but in great condition",
 				owner: "John Gates",
+				offers: [{
+					from: "Mark"
+			}],
 				willTradeFor: "Cereal Boxes or new tires",
 				imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
 		},
@@ -142,55 +226,60 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 				name: "MacBook Pro 2012",
 				description: "Slightly used but sooo goood",
 				owner: "John Gates",
+				offers: [{
+					from: "Becky"
+			}],
 				willTradeFor: "newer iphone",
 				imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
 					}]
 
 	};
 
+
 	// Mock activity
 	$scope.activity = [
 		{
-				name: "Kindle Fire",
-				description: "Good condition",
-				owner: "Mike",
-				willTradeFor: "ipad or ipad mini",
-				imgUrl: "http://www.androidcentral.com/sites/androidcentral.com/files/styles/larger/public/article_images/2014/09/Amazon-Kindle-Fire-HDX89.jpg?itok=5fenbZ5F"
+			name: "Kindle Fire",
+			description: "Good condition",
+			owner: "Mike",
+
+			willTradeFor: "ipad or ipad mini",
+			imgUrl: "http://www.androidcentral.com/sites/androidcentral.com/files/styles/larger/public/article_images/2014/09/Amazon-Kindle-Fire-HDX89.jpg?itok=5fenbZ5F"
 					},
 		{
-				name: "Lawn Chairs",
-				description: "Slightly used",
-				owner: "Dillon",
-				willTradeFor: "Samsung Note 7",
-				imgUrl: "http://tart.highbarmiami.com/wp-content/uploads/2016/03/Foldable-Lawn-Chairs-Big-Lots.jpg"
+			name: "Lawn Chairs",
+			description: "Slightly used",
+			owner: "Dillon",
+			willTradeFor: "Samsung Note 7",
+			imgUrl: "http://tart.highbarmiami.com/wp-content/uploads/2016/03/Foldable-Lawn-Chairs-Big-Lots.jpg"
 					},
 		{
-				name: "Cowboy Boots",
-				description: "Snake skin size 11",
-				owner: "Sam",
-				willTradeFor: "iphone",
-				imgUrl: "http://www.zappos.com/images/z/1/5/8/7/3/0/1587307-p-4x.jpg"
+			name: "Cowboy Boots",
+			description: "Snake skin size 11",
+			owner: "Sam",
+			willTradeFor: "iphone",
+			imgUrl: "http://www.zappos.com/images/z/1/5/8/7/3/0/1587307-p-4x.jpg"
 					},
 		{
-				name: "Playstation 4",
-				description: "Works just fine",
-				owner: "Jo Jo",
-				willTradeFor: "french fries",
-				imgUrl: "https://cnet3.cbsistatic.com/img/UxcARCVAmoih6RLZqLUT964Lvuw=/620x0/2013/11/11/3dd2de99-84cb-11e3-beb9-14feb5ca9861/Sony_PS4_35618167_03.jpg"
+			name: "Playstation 4",
+			description: "Works just fine",
+			owner: "Jo Jo",
+			willTradeFor: "french fries",
+			imgUrl: "https://cnet3.cbsistatic.com/img/UxcARCVAmoih6RLZqLUT964Lvuw=/620x0/2013/11/11/3dd2de99-84cb-11e3-beb9-14feb5ca9861/Sony_PS4_35618167_03.jpg"
 					},
 		{
-				name: "Yoga Mat",
-				description: "Slightly but in great condition",
-				owner: "John Gates",
-				willTradeFor: "Cereal Boxes or new tires",
-				imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
+			name: "Yoga Mat",
+			description: "Slightly but in great condition",
+			owner: "John Gates",
+			willTradeFor: "Cereal Boxes or new tires",
+			imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
 					},
 		{
-				name: "MacBook Pro 2012",
-				description: "Slightly used but sooo goood",
-				owner: "John Gates",
-				willTradeFor: "newer iphone",
-				imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
+			name: "MacBook Pro 2012",
+			description: "Slightly used but sooo goood",
+			owner: "John Gates",
+			willTradeFor: "newer iphone",
+			imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
 					}
     ];
 
@@ -206,8 +295,8 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 			$scope.alert = clickedItem.name + ' clicked!';
 		});
 	};
-	
-//	$scope.postItem = 
+
+	//	$scope.postItem = 
 
 	$scope.showAdd = function (ev) {
 		$mdDialog.show({
@@ -261,6 +350,10 @@ function DialogController($scope, $mdDialog) {
 	};
 };
 
+
+
+
+
 app.controller('DemoCtrl', DemoCtrl);
 
 function DemoCtrl($timeout, $q) {
@@ -309,12 +402,12 @@ function DemoCtrl($timeout, $q) {
 
 //color theme//
 
-app.config(function($mdThemingProvider) {
-               $mdThemingProvider.theme('default') 
-                  .primaryPalette('indigo')
-                  .accentPalette('orange')
-                  .warnPalette('red');
-               });
+app.config(function ($mdThemingProvider) {
+	$mdThemingProvider.theme('default')
+		.primaryPalette('indigo')
+		.accentPalette('orange')
+		.warnPalette('red');
+});
 
 
 

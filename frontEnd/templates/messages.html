@@ -3,7 +3,7 @@
 		<md-toolbar class="md-hue-2">
 			<span flex></span>
 			<div layout="row" layout-align="start center">
-				<md-icon class="md-avatar" md-svg-icon="avatars:svg-1"></md-icon>
+				<md-icon class="md-avatar" md-svg-icon="avatars:svg-16"></md-icon>
 				<span flex></span>
 			</div>
 			<span flex></span>
@@ -38,15 +38,13 @@
 
 
 	<div layout="column" class="relative" layout-fill role="main">
-		<md-button class="md-fab md-fab-bottom-right" aria-label="Add" ng-click="showAdd($event)">
-			<md-icon md-svg-icon="content:ic_add_24px" aria-label="Plus"></md-icon>
-		</md-button>
+
 		<md-toolbar class="animate-show md-tall md-whiteframe-z1" ng-show="!showSearch">
 			<div class="md-toolbar-tools">
 				<md-button class="md-icon-button" ng-click="toggleSidenav('left')" hide-gt-md aria-label="Menu">
 					<md-icon md-svg-icon="navigation:ic_menu_24px" aria-label="Menu"></md-icon>
 				</md-button>
-				
+
 				<h3>
             Trader
           </h3>
@@ -61,9 +59,8 @@
 			<span flex></span>
 			<md-tabs md-stretch-tabs="always" md-selected="data.selectedIndex">
 				<md-tab id="tab1" aria-controls="tab1-content">
-					User Profile
+					All Messages
 				</md-tab>
-				
 			</md-tabs>
 		</md-toolbar>
 		<md-toolbar ng-show="showSearch" class="animate-show md-hue-1 md-whiteframe-z1">
@@ -100,49 +97,28 @@
 		<md-content flex>
 			<ui-view layout="column" layout-fill layout-padding>
 				<div class="inset" hide-sm></div>
-				<ng-switch on="data.selectedIndex" class="tabpanel-container">
-					<div role="tabpanel" id="tab1-content" aria-labelledby="tab1" ng-switch-when="0" md-swipe-left="next()" md-swipe-right="previous()">
-						<div>
-							<h2 class="md-title inset">{{user.firstName}} {{user.lastName}}'s Trade Items</h2>
-							<div layout="row" layout-align="center center" layout-wrap>
 
 
+				<md-list flex>
+					<md-subheader class="md-no-sticky">Your Messages</md-subheader>
+					<md-list-item class="md-3-line" ng-repeat="message in user.messages" ng-click="null">
 
-								<md-card layout='column' flex-gt-lg='45' ng-repeat="item in user.tradeItems | filter:search | orderBy:'-what'">
 
-									<img ng-src="{{item.imgUrl}}" height="350px;" class="md-card-image" alt="item pic">
-									<md-card-header>
-										<md-card-avatar>
-											<md-icon class="md-avatar" md-svg-icon="avatars:svg-16"></md-icon>
-										</md-card-avatar>
-										<md-card-header-text>
-											<span class="md-title">{{user.username}}</span>
-											<span class="md-subhead">{{user.firstName}}    {{user.lastName}}</span>
-										</md-card-header-text>
-									</md-card-header>
-									<md-card-title>
-										<md-card-title-text>
-											<span class="md-headline"><h3>{{item.name}}</h3></span>
-										</md-card-title-text>
-									</md-card-title>
-									<md-card-content>
-										<p><b>Description:</b> {{item.description}}</p>
-										<p><b>Will Trade For:</b> {{item.willTradeFor}}</p>
-									</md-card-content>
-
-									<md-card-actions layout="row" layout-align="end center">
-										<md-button>Action 1</md-button>
-										<md-button>Action 2</md-button>
-									</md-card-actions>
-								</md-card>
-
-							</div>
+						<div class="md-list-item-text" layout="column">
+							<h3><md-icon class="md-avatar" md-svg-icon="avatars:svg-14"></md-icon> {{ message.from.username }}</h3>
+							<h4>Item In Question: "   "</h4>
+							<p>{{ message.content }}</p>
+							<input type="text" placeholder=" response">
+							<span><md-button class="md-raised md-accent">reply</md-button>
+						<md-button class="md-raised md-accent">delete</md-button></span>
+							<br>
 						</div>
-					</div>
-					
-	</div>
 
-	</ng-switch>
+					</md-list-item>
+					<md-divider></md-divider>
+				</md-list>
+
+	</div>
 
 	</ui-view>
 	</md-content>
