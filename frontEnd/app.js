@@ -11,10 +11,6 @@ app.config(function ($routeProvider) {
             templateUrl: "./templates/home.html",
             controller: "AppCtrl"
         })
-        .when("/profile", {
-            templateUrl: "./templates/profile.html",
-            controller: "AppCtrl"
-        })
 
     .when("/auth", {
         templateUrl: "./templates/auth.html",
