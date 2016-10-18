@@ -73,7 +73,6 @@ userRouteProtected.route("/items/:itemId")
     // PUT an update on existing items ~
     .put(function (req, res) {
         User.findById(req.user._doc._id, function (err, foundUser) {
-            console.log("foundUser ", foundUser);
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -106,9 +105,6 @@ userRouteProtected.route("/items/:itemId")
     // DELETE a single item ~
     .delete(function (req, res) {
         User.findById(req.user._doc._id, function (err, foundUser) {
-            console.log("foundUser ", foundUser);
-            console.log("req.user._doc._id ", req.user._doc._id);
-            console.log("req.params._id ", req.params._id);
             if (err) {
                 res.status(500).send(err);
             } else {
@@ -122,9 +118,30 @@ userRouteProtected.route("/items/:itemId")
                         _.remove(foundUser.tradeItems, function (n) {
                             return n === deletedItem; //?
                         });
-                        console.log("foundUser.tradeItems ", foundUser.tradeItems);
                         res.send(deletedItem);
                     }
+                });
+            }
+        });
+    });
+
+userRouteProtected.route("/messages")
+    .post(function (req, res) {
+        var message = req.body;
+        message.from = req.user._doc._id;
+        console.log("message ", message);
+        User.findOne({
+            _id: req.body.to
+        }, function (err, foundUser) {
+            console.log("foundUser ", foundUser);
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                foundUser.messages.push(message);
+                foundUser.save(function (err, savedUser) {
+                    console.log("savedUser ", savedUser);
+                    if (err) res.status(500).send(err);
+                    res.send(message);
                 });
             }
         });
