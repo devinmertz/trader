@@ -61,57 +61,6 @@ app.config(function ($routeProvider) {
 //}]);
 
 
-//app.factory('messages', ['$http', function($http){
-//	
-//	var mes = {
-//		messages: []
-//	};
-//	
-//	mes.getAll = function () {
-//		return $http.get('/messages').success(function(data) {
-//			angular.copy(data, mes.messages);
-//		});
-//	};
-//	
-//	mes.create = function(item) {
-//		return $http.post('/messages', message).success(function(data) {
-//			mes.messages.push(data);
-//		});
-//	};
-//	
-//	mes.get = function (id) {
-//		return $http.get('/messages/' + id)
-//		.then(function (res) {
-//			return res.data;
-//		});
-//	};
-//	
-//	return mes;
-//}]);
-//
-//
-//app.controller('MessageCtrl', ['$scope', function($scope){
-//	
-//	$scope.messages = mes.messages;
-//	
-//	$scope.addMessage = function() {
-//		if (!$scope.name || $scope.name === '') {
-//			return;
-//		}
-//		messages.create({
-//			to: $scope.to,
-//			from: $scope.from,
-//			subject: $scope.subject,
-//			content: $scope.content
-//		});
-//		$scope.to = '';
-//		$scope.from = '';
-//		$scope.subject = '';
-//		$scope.content = ''
-//	};
-//
-//	
-//}]);
 
 
 
