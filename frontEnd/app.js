@@ -140,8 +140,12 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
         });
     };
 
-    $scope.removeItem = function () {
+    $scope.postItem = function () {
+        ProfileService.postItem(items);
+    };
 
+    $scope.deleteItem = function (index) {
+        ProfileService.deleteItem(index);
     };
 
     $scope.updateItem = function () {
@@ -149,10 +153,6 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
     };
 
     $scope.message = function () {
-
-    };
-
-    $scope.offer = function () {
 
     };
 
