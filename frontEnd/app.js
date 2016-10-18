@@ -18,11 +18,11 @@ app.config(function ($routeProvider) {
 		.when("/logout", {
 			templateUrl: "./templates/logout.html",
 			controller: "AppCtrl"
-		})
-		.when("/profile", {
-			templateUrl: "./templates/profile.html",
-			controller: "AppCtrl"
 		});
+	// .when("/profile", {
+	// 	templateUrl: "./templates/profile.html",
+	// 	controller: "AppCtrl"
+	// });
 });
 
 //app.factory('items', ['$http', function($http){
@@ -74,6 +74,12 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 		});
 	};
 
+	$scope.logout = function () {
+		UserService.logout().then(function () {
+			$location.path('/logout');
+		});
+	};
+
 	$scope.removeItem = function () {
 
 	};
@@ -88,6 +94,10 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 
 	$scope.offer = function () {
 
+	};
+
+	$scope.changePath = function (path) {
+		$location.path(path);
 	};
 
 	//	$scope.items = obj.items;
@@ -137,20 +147,17 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 		icon: 'communication:ic_message_24px',
 
 	}];
-	$scope.admin = [
+	$scope.admin = [{
+		link: '#/auth',
+		title: 'Sign Up / Log In',
+		icon: 'action:ic_settings_24px',
 
-		{
-			link: '#/logout',
-			title: 'Logout',
-			icon: 'action:ic_settings_24px',
+	}, {
+		link: '#/logout',
+		title: 'Log Out',
+		icon: 'action:ic_settings_24px',
 
-		}, {
-			link: '#/auth',
-			title: 'temp auth',
-			icon: 'action:ic_settings_24px',
-
-		}
-	];
+	}];
 
 	//	mock user activity
 

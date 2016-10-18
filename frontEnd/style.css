@@ -22,14 +22,6 @@ body {
     text-align: center;
 }
 
-.linkFormat :hover,
- :active,
- :link,
- :visited {
-    text-decoration: none;
-    color: black;
-}
-
 
 /* Card Flipping Magic */
 
