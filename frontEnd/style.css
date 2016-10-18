@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*// Colors*/
 $gray: #eee;
 
@@ -50,6 +51,15 @@ md-list-item.md-3-line {
       left: 70px;
     }
   }
+=======
+body {
+    background-color: #ccc;
+}
+
+.removeHover :active,
+ :hover {
+    background-color: none;
+>>>>>>> master
 }
 
 /*// Round avatar*/
@@ -113,6 +123,46 @@ button {
  border-color: #FFFFFF;
 }
 
+<<<<<<< HEAD
 .chip {
  font-style: italic;
 }
+=======
+.c {
+    text-align: center;
+}
+
+
+/* Card Flipping Magic */
+
+
+/*.flip {
+    -webkit-perspective: 800;
+    position: relative;
+}
+
+.flip .card.flipped {
+    -webkit-transform: rotatex(180deg);
+}
+
+.flip .card {
+    width: 100%;
+    -webkit-transform-style: preserve-3d;
+    -webkit-transition: 0.5s;
+}
+
+.flip .card .face {
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    z-index: 2;
+}
+
+.flip .card .front {
+    z-index: 1;
+    position: absolute;
+}
+
+.flip .card .back {
+    -webkit-transform: rotatex(180deg);
+}*/
+>>>>>>> master

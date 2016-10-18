@@ -1,4 +1,4 @@
-var app = angular.module('TraderApp', ['ngMaterial', 'ngRoute']);
+var app = angular.module('TraderApp', ['ngMaterial', 'ngRoute', 'TraderApp.Auth']);
 
 
 app.config(function ($routeProvider) {
@@ -11,6 +11,7 @@ app.config(function ($routeProvider) {
 			templateUrl: "./templates/home.html",
 			controller: "AppCtrl"
 		})
+<<<<<<< HEAD
 		.when("/profile", {
 			templateUrl: "./templates/profile.html",
 			controller: "AppCtrl"
@@ -30,6 +31,20 @@ app.config(function ($routeProvider) {
 		templateUrl: "./templates/messages.html",
 		controller: "AppCtrl"
 	})
+=======
+		.when("/auth", {
+			templateUrl: "./templates/auth.html",
+			controller: "AppCtrl"
+		})
+		.when("/logout", {
+			templateUrl: "./templates/logout.html",
+			controller: "AppCtrl"
+		});
+	// .when("/profile", {
+	// 	templateUrl: "./templates/profile.html",
+	// 	controller: "AppCtrl"
+	// });
+>>>>>>> master
 });
 
 //app.factory('items', ['$http', function($http){
@@ -60,7 +75,61 @@ app.config(function ($routeProvider) {
 //	return obj;
 //}]);
 
+// ProfileService is to update user / UserService is to sign up and log in / out
+app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', 'ProfileService', 'UserService', '$location', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog, ProfileService, UserService, $location) {
 
+<<<<<<< HEAD
+//app.factory('messages', ['$http', function($http){
+//	
+//	var mes = {
+//		messages: []
+//	};
+//	
+//	mes.getAll = function () {
+//		return $http.get('/messages').success(function(data) {
+//			angular.copy(data, mes.messages);
+//		});
+//	};
+//	
+//	mes.create = function(item) {
+//		return $http.post('/messages', message).success(function(data) {
+//			mes.messages.push(data);
+//		});
+//	};
+//	
+//	mes.get = function (id) {
+//		return $http.get('/messages/' + id)
+//		.then(function (res) {
+//			return res.data;
+//		});
+//	};
+//	
+//	return mes;
+//}]);
+//
+//
+//app.controller('MessageCtrl', ['$scope', function($scope){
+//	
+//	$scope.messages = mes.messages;
+//	
+//	$scope.addMessage = function() {
+//		if (!$scope.name || $scope.name === '') {
+//			return;
+//		}
+//		messages.create({
+//			to: $scope.to,
+//			from: $scope.from,
+//			subject: $scope.subject,
+//			content: $scope.content
+//		});
+//		$scope.to = '';
+//		$scope.from = '';
+//		$scope.subject = '';
+//		$scope.content = ''
+//	};
+//
+//	
+//}]);
 
 
 
@@ -68,6 +137,51 @@ app.config(function ($routeProvider) {
 
 
 app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog) {
+=======
+	$scope.newUser = {};
+	$scope.loginUser = {};
+	$scope.user = UserService.loggedInUser;
+
+	$scope.signup = function () {
+		UserService.signup($scope.newUser).then(function (response) {
+			UserService.login($scope.newUser).then(function (response) {
+				$scope.newUser = {};
+			});
+		});
+	};
+
+	$scope.login = function () {
+		UserService.login($scope.loginUser).then(function (response) {
+			$scope.loginUser = {};
+		});
+	};
+
+	$scope.logout = function () {
+		UserService.logout().then(function () {
+			$location.path('/logout');
+		});
+	};
+
+	$scope.removeItem = function () {
+
+	};
+
+	$scope.updateItem = function () {
+
+	};
+
+	$scope.message = function () {
+
+	};
+
+	$scope.offer = function () {
+
+	};
+
+	$scope.changePath = function (path) {
+		$location.path(path);
+	};
+>>>>>>> master
 
 	//	$scope.items = obj.items;
 	//	
@@ -85,7 +199,11 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 	//		$scope.name = '';
 	//		$scope.description = '';
 	//		$scope.willTradeFor = '';
+<<<<<<< HEAD
 	//		$scope.imgUrl = ''
+=======
+	//		$scope.imgUrl = '';
+>>>>>>> master
 	//	};
 	//	
 
@@ -100,41 +218,33 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 	};
 
 	// Menu items
-	$scope.menu = [
-		{
-			link: '#/',
-			title: 'Home',
-			icon: 'action:ic_dashboard_24px',
+	$scope.menu = [{
+		link: '#/',
+		title: 'Home',
+		icon: 'action:ic_dashboard_24px',
 
-    },
-		{
-			link: '#/profile',
-			title: 'Profile',
-			icon: 'social:ic_group_24px',
+	}, {
+		link: '#/profile',
+		title: 'Profile',
+		icon: 'social:ic_group_24px',
 
-    },
-		{
-			link: '#/messages',
-			title: 'Messages',
-			icon: 'communication:ic_message_24px',
+	}, {
+		link: '#/messages',
+		title: 'Messages',
+		icon: 'communication:ic_message_24px',
 
-    }
-  ];
-	$scope.admin = [
+	}];
+	$scope.admin = [{
+		link: '#/auth',
+		title: 'Sign Up / Log In',
+		icon: 'action:ic_settings_24px',
 
-		{
-			link: '#/logout',
-			title: 'Logout',
-			icon: 'action:ic_settings_24px',
+	}, {
+		link: '#/logout',
+		title: 'Log Out',
+		icon: 'action:ic_settings_24px',
 
-    },
-		{
-			link: '#/auth',
-			title: 'temp auth',
-			icon: 'action:ic_settings_24px',
-
-    }
-  ];
+	}];
 
 	//	mock user activity
 
@@ -162,6 +272,7 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 				content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
 		}],
 		tradeItems: [{
+<<<<<<< HEAD
 				name: "Yoga Mat",
 				description: "Slightly used but in great condition",
 				owner: "John Gates",
@@ -181,11 +292,26 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 				willTradeFor: "newer iphone",
 				imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
 					}]
+=======
+			name: "Yoga Mat",
+			description: "Slightly used but in great condition",
+			owner: "John Gates",
+			willTradeFor: "Cereal Boxes or new tires",
+			imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
+		}, {
+			name: "MacBook Pro 2012",
+			description: "Slightly used but sooo goood",
+			owner: "John Gates",
+			willTradeFor: "newer iphone",
+			imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
+		}]
+>>>>>>> master
 
 	};
 
 
 	// Mock activity
+<<<<<<< HEAD
 	$scope.activity = [
 		{
 			name: "Kindle Fire",
@@ -231,6 +357,45 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 			imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
 					}
     ];
+=======
+	$scope.activity = [{
+		name: "Kindle Fire",
+		description: "Good condition",
+		owner: "Mike",
+		willTradeFor: "ipad or ipad mini",
+		imgUrl: "http://www.androidcentral.com/sites/androidcentral.com/files/styles/larger/public/article_images/2014/09/Amazon-Kindle-Fire-HDX89.jpg?itok=5fenbZ5F"
+	}, {
+		name: "Lawn Chairs",
+		description: "Slightly used",
+		owner: "Dillon",
+		willTradeFor: "Samsung Note 7",
+		imgUrl: "http://tart.highbarmiami.com/wp-content/uploads/2016/03/Foldable-Lawn-Chairs-Big-Lots.jpg"
+	}, {
+		name: "Cowboy Boots",
+		description: "Snake skin size 11",
+		owner: "Sam",
+		willTradeFor: "iphone",
+		imgUrl: "http://www.zappos.com/images/z/1/5/8/7/3/0/1587307-p-4x.jpg"
+	}, {
+		name: "Playstation 4",
+		description: "Works just fine",
+		owner: "Jo Jo",
+		willTradeFor: "french fries",
+		imgUrl: "https://cnet3.cbsistatic.com/img/UxcARCVAmoih6RLZqLUT964Lvuw=/620x0/2013/11/11/3dd2de99-84cb-11e3-beb9-14feb5ca9861/Sony_PS4_35618167_03.jpg"
+	}, {
+		name: "Yoga Mat",
+		description: "Slightly but in great condition",
+		owner: "John Gates",
+		willTradeFor: "Cereal Boxes or new tires",
+		imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
+	}, {
+		name: "MacBook Pro 2012",
+		description: "Slightly used but sooo goood",
+		owner: "John Gates",
+		willTradeFor: "newer iphone",
+		imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
+	}];
+>>>>>>> master
 
 	// Bottomsheet & Modal Dialogs
 	$scope.alert = '';
@@ -250,7 +415,7 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 	$scope.showAdd = function (ev) {
 		$mdDialog.show({
 				controller: DialogController,
-				template: '<md-dialog aria-label="Form"> <md-content class="md-padding"> <form name="userForm"> <md-input-container flex> <label>Item Name</label> <textarea ng-model="name" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Item Description</label> <textarea ng-model="description" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Will Trade For</label> <textarea ng-model="willTradeFor" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Image Url</label> <textarea ng-model="imgUrl" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="addItem()" class="md-primary"> Post </md-button> </div></md-dialog>',
+				template: '<md-dialog aria-label="Form" style="width: 500px;"> <md-content class="md-padding"> <form name="userForm"> <md-input-container flex> <label>Item Name</label> <textarea ng-model="name" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Item Description</label> <textarea ng-model="description" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Will Trade For</label> <textarea ng-model="willTradeFor" columns="1" md-maxlength="150"></textarea> </md-input-container> <md-input-container flex> <label>Image Url</label> <textarea ng-model="imgUrl" columns="1" md-maxlength="150"></textarea> </md-input-container> </form> </md-content> <div class="md-actions" layout="row"> <span flex></span> <md-button class="md-primary" ng-click="answer(\'not useful\')"> Cancel </md-button> <md-button ng-click="addItem()" class="md-primary"> Post </md-button> </div></md-dialog>',
 				targetEvent: ev,
 			})
 			.then(function (answer) {
@@ -259,27 +424,22 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 				$scope.alert = 'You cancelled the dialog.';
 			});
 	};
-					}]);
+}]);
 
 app.controller('ListBottomSheetCtrl', function ($scope, $mdBottomSheet) {
-	$scope.items = [
-		{
-			name: 'Share',
-			icon: 'social:ic_share_24px'
-		},
-		{
-			name: 'Upload',
-			icon: 'file:ic_cloud_upload_24px'
-		},
-		{
-			name: 'Copy',
-			icon: 'content:ic_content_copy_24px'
-		},
-		{
-			name: 'Print this page',
-			icon: 'action:ic_print_24px'
-		},
-  ];
+	$scope.items = [{
+		name: 'Share',
+		icon: 'social:ic_share_24px'
+	}, {
+		name: 'Upload',
+		icon: 'file:ic_cloud_upload_24px'
+	}, {
+		name: 'Copy',
+		icon: 'content:ic_content_copy_24px'
+	}, {
+		name: 'Print this page',
+		icon: 'action:ic_print_24px'
+	}, ];
 
 	$scope.listItemClick = function ($index) {
 		var clickedItem = $scope.items[$index];
