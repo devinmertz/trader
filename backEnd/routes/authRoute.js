@@ -6,6 +6,7 @@ var User = require('../schemas/Users');
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
+// send POST to (baseUrl + /auth/signup, { firstName: "John", lastName: "Smith", username: "johnjohn", password: "1234" })
 authRoute.post("/signup", function (req, res) {
     var newUser = new User(req.body);
     newUser.save(function (err, savedUser) {
@@ -14,6 +15,7 @@ authRoute.post("/signup", function (req, res) {
     });
 });
 
+// send POST to (baseUrl + /auth/login, { username: "johnjohn", password: "1234" })
 authRoute.post("/login", function (req, res) {
     User.findOne({
         username: req.body.username

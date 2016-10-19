@@ -5,6 +5,8 @@ var Item = require('../schemas/Items');
 var _ = require('lodash');
 
 // User's personal information ~
+// Send GET to baseUrl + /api/user
+// Overtaken by the auth endpoint
 userRouteProtected.route("/")
     .get(function (req, res) {
         User.findById(req.user._doc._id)
@@ -19,6 +21,7 @@ userRouteProtected.route("/")
 // User's personal trade items
 userRouteProtected.route("/items")
     // GET all posted items ~ (check for populated fields)
+    // overtaken by the auth route GET
     .get(function (req, res) {
         Item.find({
                 owner: req.user._doc._id
@@ -31,6 +34,7 @@ userRouteProtected.route("/items")
             });
     })
     // POST new trade items ~
+    // POST to (baseUrl + /api/user/items, { name: "shoes", description: "old shoes", etc })
     .post(function (req, res) {
         User.findOne({
             _id: req.user._doc._id
@@ -58,6 +62,7 @@ userRouteProtected.route("/items")
 
 userRouteProtected.route("/items/:itemId")
     // GET a single item by ID to api/user/items/:itemId ~ (check populated fields)
+    // :itemId is the _id corresponding to the Item collection
     .get(function (req, res) {
         Item.find({
                 _id: req.params.itemId,
@@ -71,6 +76,7 @@ userRouteProtected.route("/items/:itemId")
             });
     })
     // PUT an update on existing items api/user/items/:itemId with minimum object { name: "", description: "" } ~
+    // :itemId is the _id corresponding to the Item collection
     .put(function (req, res) {
         User.findById(req.user._doc._id, function (err, foundUser) {
             if (err) {
@@ -103,6 +109,7 @@ userRouteProtected.route("/items/:itemId")
 
     })
     // DELETE a single item to api/user/items/:itemId ~
+    // :itemId is the _id corresponding to the Item collection
     .delete(function (req, res) {
         User.findById(req.user._doc._id, function (err, foundUser) {
             if (err) {
@@ -126,7 +133,7 @@ userRouteProtected.route("/items/:itemId")
     });
 
 userRouteProtected.route("/messages")
-    // POST to api/user/messages with message object { to: receiverId, content: "I want that" } ~
+    // POST to (baseUrl + api/user/messages with message object { to: receiverId, content: "I want that" }) ~
     .post(function (req, res) {
         var message = req.body;
         message.from = req.user._doc._id;

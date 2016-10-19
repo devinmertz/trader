@@ -4,9 +4,11 @@ var User = require('../schemas/Users');
 var Item = require('../schemas/Items');
 
 // This route is for accessing user-specific data
+// Must be a logged in user to user this route
 
 itemRouteProtected.route("/")
     // GET all items posted by a user
+    // send GET to (baseUrl + /api/item)
     .get(function (req, res) {
         Item.find({
             owner: req.user._id
@@ -16,6 +18,7 @@ itemRouteProtected.route("/")
         });
     })
     // POST a new item listing
+    // send POST to (baseUrl + /api/item, { name: "shoes", description: "old shoes" })
     .post(function (req, res) {
         var newItem = new Item(req.body);
         newItem.save(function (err, savedItem) {
