@@ -57,7 +57,7 @@ userRouteProtected.route("/items")
     });
 
 userRouteProtected.route("/items/:itemId")
-    // GET a single item by ID ~ (check populated fields)
+    // GET a single item by ID to api/user/items/:itemId ~ (check populated fields)
     .get(function (req, res) {
         Item.find({
                 _id: req.params.itemId,
@@ -70,7 +70,7 @@ userRouteProtected.route("/items/:itemId")
                 res.send(foundItem);
             });
     })
-    // PUT an update on existing items ~
+    // PUT an update on existing items api/user/items/:itemId with minimum object { name: "", description: "" } ~
     .put(function (req, res) {
         User.findById(req.user._doc._id, function (err, foundUser) {
             if (err) {
@@ -102,7 +102,7 @@ userRouteProtected.route("/items/:itemId")
         });
 
     })
-    // DELETE a single item ~
+    // DELETE a single item to api/user/items/:itemId ~
     .delete(function (req, res) {
         User.findById(req.user._doc._id, function (err, foundUser) {
             if (err) {
@@ -126,22 +126,40 @@ userRouteProtected.route("/items/:itemId")
     });
 
 userRouteProtected.route("/messages")
+    // POST to api/user/messages with message object { to: receiverId, content: "I want that" } ~
     .post(function (req, res) {
         var message = req.body;
         message.from = req.user._doc._id;
-        console.log("message ", message);
         User.findOne({
             _id: req.body.to
         }, function (err, foundUser) {
-            console.log("foundUser ", foundUser);
             if (err) {
                 res.status(500).send(err);
             } else {
                 foundUser.messages.push(message);
                 foundUser.save(function (err, savedUser) {
-                    console.log("savedUser ", savedUser);
                     if (err) res.status(500).send(err);
                     res.send(message);
+                });
+            }
+        });
+    })
+    // DELETE to api/user/messages with message object { content: "I want that" }
+    // It's not ideal, but it's checking the array of messages by its content
+    .delete(function (req, res) {
+        User.findOneById(req.user._doc._id, function (err, foundUser) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                for (var index of foundUser.messages) {
+                    if (index.content === req.body.content) {
+                        var deletedItem = foundUser.messages[index];
+                        foundUser.messages.splice(index, 1);
+                    }
+                }
+                foundUser.save(function (err, savedUser) {
+                    if (err) res.status(500).send(err);
+                    res.send(deletedItem);
                 });
             }
         });

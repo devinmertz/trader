@@ -24,7 +24,7 @@ app.service("UserService", function ($http, $location, TokenService) {
         return $http.post(baseUrl + '/auth/signup', userObj).then(function (response) {
             if (response.data._id && response.data.username === userObj.username) {
                 console.log("Successfully signed up!");
-                return response.data;
+                return response.data; 
             }
         });
     };
@@ -38,7 +38,9 @@ app.service("UserService", function ($http, $location, TokenService) {
             } else {
                 alert("Log in failed.");
             }
-        });
+        }, function(res){
+			console.log(res);
+		});
     };
     this.logout = function () {
         TokenService.removeToken();

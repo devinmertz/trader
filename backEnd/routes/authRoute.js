@@ -9,18 +9,21 @@ var bcrypt = require('bcrypt');
 authRoute.post("/signup", function (req, res) {
     var newUser = new User(req.body);
     newUser.save(function (err, savedUser) {
+		console.log(err);
         if (err) res.status(500).send(err);
         res.send(savedUser);
     });
 });
 
 authRoute.post("/login", function (req, res) {
+	console.log(body.username);
     User.findOne({
         username: req.body.username
     }, function (err, foundUser) {
         if (err) res.status(500).send(err);
         if (!foundUser) {
-            res.status(401).send({
+            console.log('username does not exist');
+			res.status(401).send({
                 success: false,
                 message: "The username you entered does not exist"
             });
@@ -30,6 +33,7 @@ authRoute.post("/login", function (req, res) {
                 foundUser.comparePasswords(req.body.password, function (err, isMatch) {
 
                     if (!isMatch) {
+						console.log('incorrect password');
                         res.status(401).send({
                             success: false,
                             message: "Incorrect password"
