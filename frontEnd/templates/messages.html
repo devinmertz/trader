@@ -7,8 +7,9 @@
 				<span flex></span>
 			</div>
 			<span flex></span>
-			<div class="md-body-2">Firstname Lastname</div>
-			<div class="md-body-1">email@domainname.com</div>
+			<div class="md-body-2"><i class="fa fa-user" aria-hidden="true"></i>  
+			{{user.username}}</div>
+			<div class="md-body-1">{{user.firstName}} {{user.lastName}}</div>
 		</md-toolbar>
 
 		<!--      //sidenav menu//-->
@@ -59,7 +60,7 @@
 			<span flex></span>
 			<md-tabs md-stretch-tabs="always" md-selected="data.selectedIndex">
 				<md-tab id="tab1" aria-controls="tab1-content">
-					All Messages
+					Offers
 				</md-tab>
 			</md-tabs>
 		</md-toolbar>
@@ -95,32 +96,49 @@
 			</div>
 		</md-toolbar>
 		<md-content flex>
-			<ui-view layout="column" layout-fill layout-padding>
-				<div class="inset" hide-sm></div>
+		  <ui-view layout="column" layout-fill layout-padding>
+          <div class="inset" hide-sm></div>
+            <ng-switch on="data.selectedIndex" class="tabpanel-container">
+              <div role="tabpanel"
+                   id="tab1-content"
+                   aria-labelledby="tab1"
+                   ng-switch-when="0"
+                   md-swipe-left="next()"
+                   md-swipe-right="previous()"
+                   layout="row" layout-align="center center" layout-wrap>
+                   
+                  <md-card flex-gt-sm="90" flex-gt-md="80" ng-repeat="tradeItem in user.tradeItems track by $index"  ng-init="$itemIndex = $index" ng-if="tradeItem.offers.length > 0">
+                    <md-card-content>
+                     
+                      <md-list>
+                        <md-item >
+                          <md-item-content>
+                            <div class="md-tile-left inset" hide-sm class="user-avatar">
+                                <i class="fa fa-rocket" aria-hidden="true"></i>
+                            </div>
+                            <h4>Item: {{tradeItem.name}}</h4>
+                            <div class="md-tile-content" ng-repeat='offer in tradeItem.offers track by $index' ng-if="!offer.isAccepted">
+                             
+                              <h3>{{offer.message}} {{offer.tradeFor}}</h3>
+                             
+                              <span><md-button class="md-raised md-accent" ng-click="acceptOffer($itemIndex, $index)">accept</md-button>
+						<md-button class="md-raised md-accent" ng-click="deleteOffer($itemIndex, $index)">delete</md-button></span>
+                            <md-divider></md-divider>
+                            </div>
+                          </md-item-content>
+                        </md-item>
+                        
+                 
+                      </md-list>
+                    </md-card-content>
+                  </md-card>
+              </div>
+              
+              
+          </ng-switch>
+          
+        </ui-view>
 
-
-				<md-list flex>
-					<md-subheader class="md-no-sticky">Your Messages</md-subheader>
-					<md-list-item class="md-3-line" ng-repeat="message in user.messages" ng-click="null">
-
-
-						<div class="md-list-item-text" layout="column">
-							<h3><md-icon class="md-avatar" md-svg-icon="avatars:svg-14"></md-icon> {{ message.from.username }}</h3>
-							<h4>Item In Question: "   "</h4>
-							<p>{{ message.content }}</p>
-							<input type="text" placeholder=" response">
-							<span><md-button class="md-raised md-accent">accept</md-button>
-						<md-button class="md-raised md-accent">delete</md-button></span>
-							<br>
-						</div>
-
-					</md-list-item>
-					<md-divider></md-divider>
-				</md-list>
-
-	</div>
-
-	</ui-view>
 	</md-content>
 </div>
 </div>

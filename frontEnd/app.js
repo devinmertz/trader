@@ -4,16 +4,16 @@ var app = angular.module('TraderApp', ['ngMaterial', 'ngRoute', 'TraderApp.Auth'
 app.config(function ($routeProvider) {
 	$routeProvider
 		.otherwise("/", {
-			templateUrl: "./templates/home.html",
+			templateUrl: "./templates/auth.html",
 			controller: "AppCtrl"
 		})
 		.when("/", {
-			templateUrl: "./templates/home.html",
+			templateUrl: "./templates/auth.html",
 			controller: "AppCtrl"
 		})
 
-	.when("/auth", {
-		templateUrl: "./templates/auth.html",
+	.when("/home", {
+		templateUrl: "./templates/home.html",
 		controller: "AppCtrl"
 	})
 
@@ -32,11 +32,22 @@ app.config(function ($routeProvider) {
 
 
 // ProfileService is to update user / UserService is to sign up and log in / out
-app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', 'ProfileService', 'UserService', '$location', function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog, ProfileService, UserService, $location) {
+app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog', 'ProfileService', 'UserService', '$location', "$http", function ($scope, $mdBottomSheet, $mdSidenav, $mdDialog, ProfileService, UserService, $location, $http) {
 	$scope.newUser = {};
 	$scope.loginUser = {};
 	$scope.user = UserService.loggedInUser;
-	
+	$scope.publicTradeItems = [];
+
+
+	$scope.getAllItems = function () {
+
+		$http.get("http://localhost:8080/item").then(function (response) {
+		
+			$scope.publicTradeItems = response.data;
+			console.log($scope.publicTradeItems);
+		});
+	};
+	$scope.getAllItems();
 
 	$scope.signup = function () {
 		UserService.signup($scope.newUser).then(function (response) {
@@ -50,7 +61,9 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 
 
 	$scope.login = function () {
-		UserService.login($scope.loginUser).then(function (response) {
+		UserService.login($scope.loginUser).then(function () {
+			$scope.user = UserService.loggedInUser;
+			console.log("$scope.user", $scope.user);
 			$scope.loginUser = {};
 		});
 	};
@@ -62,41 +75,84 @@ app.controller('AppCtrl', ['$scope', '$mdBottomSheet', '$mdSidenav', '$mdDialog'
 	};
 
 	$scope.addItem = function () {
+		console.log('working');
 		$scope.itemObj = {
-		name: $scope.name,
-		description: $scope.description,
-		willTradeFor: $scope.willTradeFor,
-		imgUrl: $scope.imgUrl
-	};
-		ProfileService.postItem($scope.itemObj);
+			name: $scope.name,
+			description: $scope.description,
+			willTradeFor: $scope.willTradeFor,
+			imgUrl: $scope.imgUrl
+		};
+		ProfileService.postItem($scope.itemObj)
+		.then(function(){
+			$scope.getAllItems();
+		});
+		
+		console.log($scope.itemObj);
 		$scope.name = '';
 		$scope.description = '';
 		$scope.willTradeFor = '';
 		$scope.imgUrl = '';
+		$scope.getAllItems();
 	};
 
+	
 	$scope.deleteItem = function (index) {
 		ProfileService.deleteItem(index)
 	};
-//is this right?
+	
+	$scope.deleteOffer = function(tradeItemIndex, index){
+		$scope.user.tradeItems[tradeItemIndex].offers.splice(index, 1);
+		ProfileService.putItem(index, $scope.user.tradeItems[tradeItemIndex]);
+	}
+
+
 	$scope.updateItem = function (index) {
-ProfileService.putItem(index)
+		var itemObj = $scope.user.tradeItems[index];
+		if ($scope.newName !== itemObj.name) itemObj.name = $scope.newName;
+		if ($scope.newDescription !== itemObj.description) itemObj.name = $scope.newDescription;
+
+		ProfileService.putItem(index, itemObj)
 	};
 
 	
-//	idea: how about pushing a message onto the trade item using button on item card, if owner presses accept button in his inbox then it deletes the item from his trade items
+	$scope.addOffer = function (index, tradeFor) {
+		$scope.offer = {
+			from: UserService.loggedInUser._id,
+			tradeFor: tradeFor,
+			message: 'I would like to make a trade offer for this item in exchange for: '
+		};
+		ProfileService.postItemOffer($scope.publicTradeItems[index], $scope.offer)
+			.then(function (itemWithOffer) {
+			$scope.publicTradeItems.splice(index, 1, itemWithOffer);
+			});
+		$scope.tradeFor = '';
+		$scope.content = '';
+	};
 	
-//	$scope.addMessage = function ($scope.message, index) {
-//$scope.message = {
-//	from: $scope.from,
-//	content: $scope.content
-//};
-//		ProfileService.putItem(index)
-//		.then{
-//			$scope.itemObj.push($scope.message);
-//		};
-//		$scope.message = '';
+	// Message tab
+	$scope.acceptOffer = function(itemIndex, index){
+		
+		$scope.publicTradeItems[itemIndex].offers[index].isAccepted = true;
+		console.log("itemIndex ", $scope.publicTradeItems[itemIndex].offers[index].isAccepted);
+		ProfileService.putItem($scope.publicTradeItems[itemIndex]).then(function(response){
+			console.log("response ", response);
+			$scope.publicTradeItems.splice(itemIndex, 1, response);
+		});
+	};
+	
+	$scope.denyOffer = function(index) {
+		
+	};
+
+
+	//not working due to index?
+//	$scope.acceptOffer = function () {
+//		var itemObj = $scope.user.tradeItems[index];
+//		itemObj.available = false;
+//		ProfileService.putItem(index, itemObj)
 //	};
+
+
 
 	// Toolbar search toggle
 	$scope.toggleSearch = function (element) {
@@ -108,14 +164,16 @@ ProfileService.putItem(index)
 	};
 	// Menu items
 	$scope.menu = [{
-		link: '#/',
+		link: '#/home',
 		title: 'Home',
-		icon: 'action:ic_dashboard_24px',
-    }, {
-		link: '#/profile',
-		title: 'Profile',
-		icon: 'social:ic_group_24px',
-    }, {
+		icon: 'fa fa-user',
+    }, 
+//				   {
+//		link: '#/profile',
+//		title: 'Profile',
+//		icon: 'social:ic_group_24px',
+//    }, 
+				   {
 		link: '#/messages',
 		title: 'Messages',
 		icon: 'communication:ic_message_24px',
@@ -126,89 +184,10 @@ ProfileService.putItem(index)
 		icon: 'action:ic_settings_24px',
     }, {
 		link: '#/auth',
-		title: 'temp auth',
+		title: 'login',
 		icon: 'action:ic_settings_24px',
     }];
-	//  mock user activity
-	$scope.user = {
-		firstName: "John",
-		lastName: "Franklin",
-		username: "user123",
-		password: "password",
-		imgUrl: "http://a4.files.biography.com/image/upload/c_fit,cs_srgb,dpr_1.0,h_1200,q_80,w_1200/MTE1ODA0OTcxODA2OTgzNjkz.jpg",
-		location: "Los Angeles, CA",
-		lookingFor: "cool stuff",
-		messages: [{
-			from: $scope.user,
-			content: "Hey I Would like to trade for your macbook. Is there anything on my profile you would like to exchange for?"
-        }, {
-			from: $scope.user,
-			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        }, {
-			from: $scope.user,
-			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        }, {
-			from: $scope.user,
-			content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        }],
-		tradeItems: [{
-			name: "Yoga Mat",
-			description: "Slightly used but in great condition",
-			owner: "John Gates",
-			offers: [{
-				from: "Mark"
-            }],
-			willTradeFor: "Cereal Boxes or new tires",
-			imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
-        }, {
-			name: "MacBook Pro 2012",
-			description: "Slightly used but sooo goood",
-			owner: "John Gates",
-			offers: [{
-				from: "Becky"
-            }],
-			willTradeFor: "newer iphone",
-			imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
-        }]
-	};
-	// Mock activity
-	$scope.activity = [{
-		name: "Kindle Fire",
-		description: "Good condition",
-		owner: "Mike",
-		willTradeFor: "ipad or ipad mini",
-		imgUrl: "http://www.androidcentral.com/sites/androidcentral.com/files/styles/larger/public/article_images/2014/09/Amazon-Kindle-Fire-HDX89.jpg?itok=5fenbZ5F"
-    }, {
-		name: "Lawn Chairs",
-		description: "Slightly used",
-		owner: "Dillon",
-		willTradeFor: "Samsung Note 7",
-		imgUrl: "http://tart.highbarmiami.com/wp-content/uploads/2016/03/Foldable-Lawn-Chairs-Big-Lots.jpg"
-    }, {
-		name: "Cowboy Boots",
-		description: "Snake skin size 11",
-		owner: "Sam",
-		willTradeFor: "iphone",
-		imgUrl: "http://www.zappos.com/images/z/1/5/8/7/3/0/1587307-p-4x.jpg"
-    }, {
-		name: "Playstation 4",
-		description: "Works just fine",
-		owner: "Jo Jo",
-		willTradeFor: "french fries",
-		imgUrl: "https://cnet3.cbsistatic.com/img/UxcARCVAmoih6RLZqLUT964Lvuw=/620x0/2013/11/11/3dd2de99-84cb-11e3-beb9-14feb5ca9861/Sony_PS4_35618167_03.jpg"
-    }, {
-		name: "Yoga Mat",
-		description: "Slightly but in great condition",
-		owner: "John Gates",
-		willTradeFor: "Cereal Boxes or new tires",
-		imgUrl: "http://www.texasrockgym.com/wp-content/uploads/2016/04/Yoga-mat-for-fitness-1329383585-0.jpg"
-    }, {
-		name: "MacBook Pro 2012",
-		description: "Slightly used but sooo goood",
-		owner: "John Gates",
-		willTradeFor: "newer iphone",
-		imgUrl: "http://images.newseveryday.com/data/images/full/43002/apple-may-finally-put-down-the-legacy-macbook-pro.jpg"
-    }];
+	
 	// Bottomsheet & Modal Dialogs
 	$scope.alert = '';
 	$scope.showListBottomSheet = function ($event) {
@@ -266,12 +245,29 @@ function DialogController($scope, $mdDialog, ProfileService, UserService) {
 		$mdDialog.hide(answer);
 	};
 	$scope.addItem = function () {
-		console.log("user");
-		//        ProfileService.postItem(items);
+		console.log('working');
+		$scope.itemObj = {
+			name: $scope.name,
+			description: $scope.description,
+			willTradeFor: $scope.willTradeFor,
+			imgUrl: $scope.imgUrl
+		};
+		ProfileService.postItem($scope.itemObj);
+		console.log($scope.itemObj);
+		$scope.name = '';
+		$scope.description = '';
+		$scope.willTradeFor = '';
+		$scope.imgUrl = '';
 	};
+
 	$scope.user = UserService.loggedInUser;
 };
 app.controller('DemoCtrl', DemoCtrl);
+
+
+
+
+
 
 function DemoCtrl($timeout, $q) {
 	var self = this;
@@ -326,27 +322,9 @@ app.config(function ($mdThemingProvider) {
 
 
 
-app.config(function ($mdIconProvider) {
-	$mdIconProvider
-	// linking to https://github.com/google/material-design-icons/tree/master/sprites/svg-sprite
-	// 
-		.iconSet('action', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-action.svg', 24)
-		.iconSet('alert', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-alert.svg', 24)
-		.iconSet('av', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-av.svg', 24)
-		.iconSet('communication', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-communication.svg', 24)
-		.iconSet('content', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-content.svg', 24)
-		.iconSet('device', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-device.svg', 24)
-		.iconSet('editor', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-editor.svg', 24)
-		.iconSet('file', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-file.svg', 24)
-		.iconSet('hardware', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-hardware.svg', 24)
-		.iconSet('image', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-image.svg', 24)
-		.iconSet('maps', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-maps.svg', 24)
-		.iconSet('navigation', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-navigation.svg', 24)
-		.iconSet('notification', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-notification.svg', 24)
-		.iconSet('social', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-social.svg', 24)
-		.iconSet('toggle', 'https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-toggle.svg', 24)
-
-	// Illustrated user icons used in the docs https://material.angularjs.org/latest/#/demo/material.components.gridList
-	.iconSet('avatars', 'https://raw.githubusercontent.com/angular/material/master/docs/app/icons/avatar-icons.svg', 24)
-		.defaultIconSet('https://raw.githubusercontent.com/google/material-design-icons/master/sprites/svg-sprite/svg-sprite-action.svg', 24);
+app.directive('userAvatar', function() {
+  return {
+    replace: true,
+    template: '<svg class="user-avatar" viewBox="0 0 128 128" height="64" width="64" pointer-events="none" display="block" > <path fill="#FF8A80" d="M0 0h128v128H0z"/> <path fill="#FFE0B2" d="M36.3 94.8c6.4 7.3 16.2 12.1 27.3 12.4 10.7-.3 20.3-4.7 26.7-11.6l.2.1c-17-13.3-12.9-23.4-8.5-28.6 1.3-1.2 2.8-2.5 4.4-3.9l13.1-11c1.5-1.2 2.6-3 2.9-5.1.6-4.4-2.5-8.4-6.9-9.1-1.5-.2-3 0-4.3.6-.3-1.3-.4-2.7-1.6-3.5-1.4-.9-2.8-1.7-4.2-2.5-7.1-3.9-14.9-6.6-23-7.9-5.4-.9-11-1.2-16.1.7-3.3 1.2-6.1 3.2-8.7 5.6-1.3 1.2-2.5 2.4-3.7 3.7l-1.8 1.9c-.3.3-.5.6-.8.8-.1.1-.2 0-.4.2.1.2.1.5.1.6-1-.3-2.1-.4-3.2-.2-4.4.6-7.5 4.7-6.9 9.1.3 2.1 1.3 3.8 2.8 5.1l11 9.3c1.8 1.5 3.3 3.8 4.6 5.7 1.5 2.3 2.8 4.9 3.5 7.6 1.7 6.8-.8 13.4-5.4 18.4-.5.6-1.1 1-1.4 1.7-.2.6-.4 1.3-.6 2-.4 1.5-.5 3.1-.3 4.6.4 3.1 1.8 6.1 4.1 8.2 3.3 3 8 4 12.4 4.5 5.2.6 10.5.7 15.7.2 4.5-.4 9.1-1.2 13-3.4 5.6-3.1 9.6-8.9 10.5-15.2M76.4 46c.9 0 1.6.7 1.6 1.6 0 .9-.7 1.6-1.6 1.6-.9 0-1.6-.7-1.6-1.6-.1-.9.7-1.6 1.6-1.6zm-25.7 0c.9 0 1.6.7 1.6 1.6 0 .9-.7 1.6-1.6 1.6-.9 0-1.6-.7-1.6-1.6-.1-.9.7-1.6 1.6-1.6z"/> <path fill="#E0F7FA" d="M105.3 106.1c-.9-1.3-1.3-1.9-1.3-1.9l-.2-.3c-.6-.9-1.2-1.7-1.9-2.4-3.2-3.5-7.3-5.4-11.4-5.7 0 0 .1 0 .1.1l-.2-.1c-6.4 6.9-16 11.3-26.7 11.6-11.2-.3-21.1-5.1-27.5-12.6-.1.2-.2.4-.2.5-3.1.9-6 2.7-8.4 5.4l-.2.2s-.5.6-1.5 1.7c-.9 1.1-2.2 2.6-3.7 4.5-3.1 3.9-7.2 9.5-11.7 16.6-.9 1.4-1.7 2.8-2.6 4.3h109.6c-3.4-7.1-6.5-12.8-8.9-16.9-1.5-2.2-2.6-3.8-3.3-5z"/> <circle fill="#444" cx="76.3" cy="47.5" r="2"/> <circle fill="#444" cx="50.7" cy="47.6" r="2"/> <path fill="#444" d="M48.1 27.4c4.5 5.9 15.5 12.1 42.4 8.4-2.2-6.9-6.8-12.6-12.6-16.4C95.1 20.9 92 10 92 10c-1.4 5.5-11.1 4.4-11.1 4.4H62.1c-1.7-.1-3.4 0-5.2.3-12.8 1.8-22.6 11.1-25.7 22.9 10.6-1.9 15.3-7.6 16.9-10.2z"/> </svg>'
+  };
 });

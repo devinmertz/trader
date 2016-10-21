@@ -29,18 +29,23 @@ app.service("UserService", function ($http, $location, TokenService) {
         });
     };
     this.login = function (userObj) {
-        return $http.post(baseUrl + '/auth/login', userObj).then(function (response) {
+		
+		var data = {
+			username: userObj.email,
+			password: userObj.password
+		};
+        return $http.post(baseUrl + '/auth/login', data).then(function (response) {
+		
             console.log("response ", response);
             if (response.data.token) {
-                this.loggedInUser = response.data.user;
+                _this.loggedInUser = response.data.user;
                 TokenService.saveToken(response.data.token);
-                $location.path('/profile'); //change
+				console.log(_this.loggedInUser);
+                $location.path('/home'); //change
             } else {
                 alert("Log in failed.");
             }
-        }, function(res){
-			console.log(res);
-		});
+        });
     };
     this.logout = function () {
         TokenService.removeToken();
