@@ -20,10 +20,9 @@ var ItemSchema = new mongoose.Schema({
             type: Schema.Types.ObjectId,
             ref: "User"
         },
-        willTradeFor: {
-            type: Schema.Types.ObjectId,
-            ref: "Item"
-        }
+        tradeFor: String,
+
+        message: String
     }],
     willTradeFor: String,
     datePosted: Date,

@@ -27,6 +27,49 @@ itemRouteProtected.route("/")
         });
     });
 
+// POST a new message to the item's offers array
+// send POST to (baseUrl + /api/item/message/:itemId, { tradeFor: "ipod", message: "I will trade for that" })
+// :itemId will be the _id corresponding to the Item collection
+// the offer.from will be added in this endpoint from the req.user._id
+itemRouteProtected.route("/message/:itemId")
+    .post(function (req, res) {
+        Item.findOne({
+            _id: req.params.itemId
+        }, function (err, foundItem) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                req.body.from = req._doc.user._id;
+                foundItem.push(req.body);
+                foundItem.save(function (err, savedItem) {
+                    if (err) res.status(500).send(err);
+                    res.send(savedItem);
+                });
+            }
+        });
+    })
+    // to remove an offer message, you will have to do a PUT on the Item collection
+    // you will splice the offer message from the offer array on the front end and then send back the whole item object
+    // this endpoint will then extract the array from the whole object and overwrite it on this end and save it
+    // 
+    .put(function (req, res) {
+        Item.findOne({
+            _id: req.params.itemId
+        }, function (err, foundItem) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                for (index of foundItem.offers) {
+                    if (foundItem[index].message === res.body) {
+                        foundItem.tradeItems.splice(index, 1, req.body);
+                        res.send(foundItem);
+                    }
+                }
+                res.status(500).send(err);
+            }
+        });
+    });
+
 itemRouteProtected.route("/:itemId")
     // GET one item posting and populate relevant data
     .get(function (req, res) {

@@ -172,6 +172,7 @@ userRouteProtected.route("/messages")
         });
     });
 
+
 // User's personal information
 
 
